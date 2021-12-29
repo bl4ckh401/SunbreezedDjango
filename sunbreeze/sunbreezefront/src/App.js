@@ -1,50 +1,46 @@
 import './App.css';
+import React, {useEffect, useState} from 'react'
 import Footer from './Components/Footer';
 import Header from './Components/Header';
 import Home from './Pages/Home';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Cart from './Pages/Cart';
-import Promo from './Pages/Promo';
-import { CartProvider } from "use-cart";
+import Login from './Pages/login';
 
 function App() {
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    try {
+      if(localStorage.getItem('token') !== null ){
+       // history.push("/products")
+       setIsLoggedIn(true)
+      }
+      else{
+        //window.location.replace("http://127.0.0.1:3000/Login")
+        setIsLoggedIn(false)
+        console.log("Token doesn't exist")
+      }
+    } catch (error) {
+      console.log(error)
     }
-    return cookieValue;
-}
-
-  function uuidv4(){
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
-      var r = Math.random() *16|0, v = c == 'x'? r:(r & 0x3 | 0x8)
-      return v.toString(16)
-    })
-  }
-
-  let device = getCookie('device')
-  if (device == null || device == undefined){
-    device = uuidv4()
-} 
-
-  document.cookie = 'device=' + device +";domain=;path=/"
-  console.log(device)
+  }, [])
 
   return (
     <div className="App">
       <Router>
         <Header />
-           <Route path='/products' component={Home} />
-            <Route path='/cart' component={Cart} />
+        {
+          isLoggedIn ?
+          <Redirect to="/products"/>
+          :
+          <Redirect to="/products"/>
+        }
+          <Switch>
+          <Route path="/login" component={ Login } />
+
+          </Switch>
         <Footer />
       </Router>
     </div>

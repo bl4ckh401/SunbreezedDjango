@@ -4,6 +4,10 @@ import "./header.css"
 import { Link } from "react-router-dom";
 
 function Header() {
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+    };
     return (
             <div  className="header_Top">
             <div className="header_place">
@@ -22,7 +26,10 @@ function Header() {
             )
             })
             } 
-            <button className="button">CALL NOW</button>          
+
+            <button className="button">CALL NOW</button>   
+            <button className="button" onClick={handleLogout}>Log Out</button>          
+       
             </div>
            </div>
         </div>
